@@ -61,6 +61,7 @@ public class FormTabungan extends JFrame {
         form.add(txtJumlah);
 
         JPanel panelBtn = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        //tambah tombol kembali
         panelBtn.add(btnKembali);
         panelBtn.add(btnSimpan);
 
