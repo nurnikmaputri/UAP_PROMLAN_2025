@@ -6,11 +6,12 @@ import util.FileManager;
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 public class FormTabungan extends JFrame {
 
-    private JTextField txtKet, txtJumlah;
+    private JTextField txtTanggal, txtKet, txtJumlah;
     private JComboBox<String> cbJenis;
     private Tabungan dataEdit;
 
@@ -18,14 +19,17 @@ public class FormTabungan extends JFrame {
         dataEdit = t;
 
         setTitle(t == null ? "Tambah Tabungan" : "Edit Tabungan");
-        setSize(420, 300);
+        setSize(420, 340);
         setLocationRelativeTo(null);
 
+        txtTanggal = new JTextField();
         txtKet = new JTextField();
         txtJumlah = new JTextField();
-        cbJenis = new JComboBox<>(new String[]{"Masuk","Keluar"});
+        cbJenis = new JComboBox<>(new String[]{"Masuk", "Keluar"});
 
+        // Jika edit data
         if (t != null) {
+            txtTanggal.setText(t.getTanggal().toString());
             txtKet.setText(t.getKeterangan());
             txtJumlah.setText(String.valueOf(t.getJumlah()));
             cbJenis.setSelectedItem(t.getJenis());
@@ -34,15 +38,21 @@ public class FormTabungan extends JFrame {
         JButton btnSimpan = new JButton("Simpan");
         JButton btnKembali = new JButton("Kembali");
 
-        btnSimpan.setBackground(new Color(52,152,219));
+        btnSimpan.setBackground(new Color(52, 152, 219));
         btnSimpan.setForeground(Color.WHITE);
-        btnKembali.setBackground(Color.LIGHT_GRAY);
 
-        btnKembali.addActionListener(e -> { new Dashboard(); dispose(); });
+        btnKembali.addActionListener(e -> {
+            new Dashboard();
+            dispose();
+        });
+
         btnSimpan.addActionListener(e -> simpan());
 
-        JPanel form = new JPanel(new GridLayout(4,2,10,10));
-        form.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
+        JPanel form = new JPanel(new GridLayout(5, 2, 10, 10));
+        form.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        form.add(new JLabel("Tanggal (yyyy-MM-dd)"));
+        form.add(txtTanggal);
         form.add(new JLabel("Keterangan"));
         form.add(txtKet);
         form.add(new JLabel("Jenis"));
@@ -61,8 +71,20 @@ public class FormTabungan extends JFrame {
     }
 
     private void simpan() {
-        if (txtKet.getText().trim().isEmpty() || txtJumlah.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this,"Data tidak boleh kosong");
+
+        // ================= VALIDASI =================
+        if (txtTanggal.getText().trim().isEmpty()
+                || txtKet.getText().trim().isEmpty()
+                || txtJumlah.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Semua data wajib diisi!");
+            return;
+        }
+
+        LocalDate tanggal;
+        try {
+            tanggal = LocalDate.parse(txtTanggal.getText());
+        } catch (DateTimeParseException e) {
+            JOptionPane.showMessageDialog(this, "Format tanggal harus yyyy-MM-dd");
             return;
         }
 
@@ -71,18 +93,26 @@ public class FormTabungan extends JFrame {
             jumlah = Double.parseDouble(txtJumlah.getText());
             if (jumlah <= 0) throw new NumberFormatException();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this,"Jumlah harus angka > 0");
+            JOptionPane.showMessageDialog(this, "Jumlah harus angka dan > 0");
             return;
         }
 
         ArrayList<Tabungan> list = FileManager.loadData();
 
+        // ================= SIMPAN DATA =================
         if (dataEdit == null) {
-            list.add(new Tabungan(list.size()+1, LocalDate.now(),
-                    txtKet.getText(), cbJenis.getSelectedItem().toString(), jumlah));
+            int idBaru = list.size() + 1;
+            list.add(new Tabungan(
+                    idBaru,
+                    tanggal,
+                    txtKet.getText(),
+                    cbJenis.getSelectedItem().toString(),
+                    jumlah
+            ));
         } else {
             for (Tabungan t : list) {
                 if (t.getId() == dataEdit.getId()) {
+                    t.setTanggal(tanggal);
                     t.setKeterangan(txtKet.getText());
                     t.setJenis(cbJenis.getSelectedItem().toString());
                     t.setJumlah(jumlah);
@@ -91,7 +121,7 @@ public class FormTabungan extends JFrame {
         }
 
         FileManager.saveData(list);
-        JOptionPane.showMessageDialog(this,"Data berhasil disimpan");
+        JOptionPane.showMessageDialog(this, "Data berhasil disimpan");
         new Dashboard();
         dispose();
     }
