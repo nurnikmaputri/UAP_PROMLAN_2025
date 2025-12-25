@@ -72,6 +72,7 @@ public class FormTabungan extends JFrame {
 
     private void simpan() {
 
+        //validasi kosong
         if (txtTanggal.getText().trim().isEmpty()
                 || txtKet.getText().trim().isEmpty()
                 || txtJumlah.getText().trim().isEmpty()) {
