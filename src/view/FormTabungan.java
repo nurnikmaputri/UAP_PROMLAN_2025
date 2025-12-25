@@ -18,6 +18,7 @@ public class FormTabungan extends JFrame {
     public FormTabungan(Tabungan t) {
         dataEdit = t;
 
+        //support create and update
         setTitle(t == null ? "Tambah Tabungan" : "Edit Tabungan");
         setSize(420, 340);
         setLocationRelativeTo(null);
@@ -27,7 +28,6 @@ public class FormTabungan extends JFrame {
         txtJumlah = new JTextField();
         cbJenis = new JComboBox<>(new String[]{"Masuk", "Keluar"});
 
-        // Jika edit data
         if (t != null) {
             txtTanggal.setText(t.getTanggal().toString());
             txtKet.setText(t.getKeterangan());
@@ -72,7 +72,6 @@ public class FormTabungan extends JFrame {
 
     private void simpan() {
 
-        // ================= VALIDASI =================
         if (txtTanggal.getText().trim().isEmpty()
                 || txtKet.getText().trim().isEmpty()
                 || txtJumlah.getText().trim().isEmpty()) {
@@ -99,7 +98,6 @@ public class FormTabungan extends JFrame {
 
         ArrayList<Tabungan> list = FileManager.loadData();
 
-        // ================= SIMPAN DATA =================
         if (dataEdit == null) {
             int idBaru = list.size() + 1;
             list.add(new Tabungan(
