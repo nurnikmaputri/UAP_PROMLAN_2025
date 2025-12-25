@@ -99,6 +99,7 @@ public class FormTabungan extends JFrame {
 
         ArrayList<Tabungan> list = FileManager.loadData();
 
+        //final update
         if (dataEdit == null) {
             int idBaru = list.size() + 1;
             list.add(new Tabungan(
