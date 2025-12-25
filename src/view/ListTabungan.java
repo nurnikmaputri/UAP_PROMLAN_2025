@@ -31,6 +31,7 @@ public class ListTabungan extends JFrame {
         table.setRowSorter(sorter);
         search.addCaretListener(e -> sorter.setRowFilter(RowFilter.regexFilter(search.getText())));
 
+        //tambah tombol edit
         JButton edit = new JButton("Edit");
         JButton hapus = new JButton("Hapus");
         JButton kembali = new JButton("Kembali");
