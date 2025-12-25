@@ -5,6 +5,7 @@ import java.awt.*;
 
 public class Dashboard extends JFrame {
 
+    //percantik gui
     public Dashboard() {
         setTitle("Dashboard Tabungan Mahasiswa");
         setSize(420, 320);
