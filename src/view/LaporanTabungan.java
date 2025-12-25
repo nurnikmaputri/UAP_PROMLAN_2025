@@ -48,7 +48,8 @@ public class LaporanTabungan extends JFrame {
         JTable table = new JTable(model);
         loadTable();
 
-        // ================= BUTTON =================
+        // ================= BUTTON ================
+        //tambah sorting
         JButton sortTanggalAsc = new JButton("Tanggal Lama → Baru");
         JButton sortTanggalDesc = new JButton("Tanggal Baru → Lama");
         JButton sortMasuk = new JButton("Masuk Dahulu");
