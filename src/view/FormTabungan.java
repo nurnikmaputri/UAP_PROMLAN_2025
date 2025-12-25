@@ -121,7 +121,7 @@ public class FormTabungan extends JFrame {
         }
 
         FileManager.saveData(list);
-        JOptionPane.showMessageDialog(this, "Data berhasil disimpan");
+        JOptionPane.showMessageDialog(this, "Data tabungan berhasil disimpan");
         new Dashboard();
         dispose();
     }
